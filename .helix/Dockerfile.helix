@@ -1,0 +1,17 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential ca-certificates cmake g++ git pkg-config curl jq ripgrep wget && rm -rf /var/lib/apt/lists/*
+
+RUN check_min() {       tool=$1 ; min=$2 ; actual=$3 ; ok=$(awk "BEGIN{ split(\"$actual\",a,\".\") ; split(\"$min\",m,\".\") ; for(i=1 ; i<=3 ; i++){ if(a[i]+0>m[i]+0){print 1 ; exit} if(a[i]+0<m[i]+0){print 0 ; exit} } ; print 1}") ; if [ "$ok" -ne 1 ] ; then         echo "FAIL: $tool $actual < minimum $min" >&2 ; exit 1 ; fi ; echo "OK: $tool $actual >= $min" ; } ; check_min git 2.25.0 "$(git --version | awk '{print $3}')" && check_min curl 7.70.0 "$(curl --version | head -1 | awk '{print $2}')" && check_min jq 1.6 "$(jq --version | sed 's/^jq-//')" && check_min rg 13.0.0 "$(rg --version | head -1 | awk '{print $2}')"
+
+COPY . .
+
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_UNITTESTS=ON -DENABLE_UNITTEST_CPP_TESTS=ON -DEXTENSION_TESTS_ONLY=ON -DRE2_BUILD_TESTING=ON && cmake --build build -j"$(nproc)"
+
+CMD ["sh", "-c", "ctest --test-dir build --output-on-failure"]

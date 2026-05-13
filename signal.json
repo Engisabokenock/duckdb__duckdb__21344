@@ -1,0 +1,12 @@
+{
+  "test_validation_mode": "subset",
+  "validation_test_files": [
+    "test/catalog/test_catalog_version.cpp",
+    "test/appender/test_appender.cpp",
+    "test/helpers/test_helpers.cpp",
+    "test/fuzzer/afl/analyze_empty_table.test",
+    "test/fuzzer/public/insert_returning.test"
+  ],
+  "validation_test_file_count": 5,
+  "validation_tests_executed": null
+}

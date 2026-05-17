@@ -49,6 +49,17 @@ endif()
 
 add_executable(unittest unittest.cpp ${ALL_OBJECT_FILES})
 
+if(${ENABLE_UNITTEST_CPP_TESTS} AND NOT WIN32)
+  # Register the shell-bail test with CTest so it can be targeted by name.
+  # The test exercises that bail_on_error defaults to true for non-interactive
+  # (piped) stdin — verified by spawning the duckdb CLI binary.
+  enable_testing()
+  add_test(
+    NAME test_shell_bail
+    COMMAND $<TARGET_FILE:unittest> "[shell_bail]"
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(unittest PRIVATE -Wno-error=maybe-uninitialized)
 endif()

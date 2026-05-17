@@ -2,6 +2,9 @@ if(NOT CLANG_TIDY)
   add_subdirectory(adbc)
 endif()
 
+# Needed by test_shell_bail.cpp to locate the duckdb binary at test runtime.
+add_definitions(-DDUCKDB_BUILD_DIRECTORY="${PROJECT_BINARY_DIR}")
+
 if(${DISABLE_THREADS})
   add_definitions(-DDUCKDB_NO_THREADS)
 endif()
@@ -40,7 +43,7 @@ set(TEST_API_OBJECTS
     test_buffer_pool_eviction.cpp)
 
 if(NOT WIN32)
-  set(TEST_API_OBJECTS ${TEST_API_OBJECTS} test_read_only.cpp)
+  set(TEST_API_OBJECTS ${TEST_API_OBJECTS} test_read_only.cpp test_shell_bail.cpp)
 endif()
 
 if(DUCKDB_EXTENSION_TPCH_SHOULD_LINK)

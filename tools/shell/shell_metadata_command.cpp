@@ -775,7 +775,7 @@ MetadataResult SetPager(ShellState &state, const vector<string> &args) {
 }
 
 static const MetadataCommand metadata_commands[] = {
-    {"bail", 2, ToggleBail, "on|off", "Stop after hitting an error.  Default OFF", 3, ""},
+    {"bail", 2, ToggleBail, "on|off", "Stop after hitting an error.  Default ON when non-interactive", 3, ""},
     {"binary", 2, ToggleBinary, "on|off", "Turn binary output on or off.  Default OFF", 3, ""},
     {"cd", 2, ChangeDirectory, "DIRECTORY", "Change the working directory to DIRECTORY", 0, ""},
     {"changes", 2, ToggleChanges, "on|off", "Show number of rows changed by SQL", 3, ""},

@@ -3090,6 +3090,10 @@ int RunShell(int argc, const char **argv) {
 	data.stdin_is_interactive = isatty(0);
 	data.stdout_is_console = isatty(1);
 	data.stderr_is_console = isatty(2);
+	// When reading from a non-interactive source (piped input), bail on error by default
+	if (!data.stdin_is_interactive) {
+		data.bail_on_error = true;
+	}
 
 	data.Initialize();
 
